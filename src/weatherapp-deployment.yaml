@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\Administrator\Downloads\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: weatherapp
+  name: weatherapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: weatherapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\Administrator\Downloads\kompose.exe convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: weatherapp
+    spec:
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              value: password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /https/aspnetapp.pfx
+            - name: ASPNETCORE_URLS
+              value: https://+:443;http://+:80
+          image: weatherapp
+          name: weatherapp
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          resources: {}
+          volumeMounts:
+            - mountPath: /https
+              name: weatherapp-claim0
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: weatherapp-claim0
+          persistentVolumeClaim:
+            claimName: weatherapp-claim0
+            readOnly: true
+status: {}
