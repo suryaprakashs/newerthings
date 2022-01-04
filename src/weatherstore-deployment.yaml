@@ -5,13 +5,13 @@ metadata:
     kompose.version: 1.26.0 (40646f47)
   creationTimestamp: null
   labels:
-    io.kompose.service: weatherapp
-  name: weatherapp
+    io.kompose.service: weatherstore
+  name: weatherstore
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: weatherapp
+      io.kompose.service: weatherstore
   strategy: {}
   template:
     metadata:
@@ -19,14 +19,13 @@ spec:
         kompose.version: 1.26.0 (40646f47)
       creationTimestamp: null
       labels:
-        io.kompose.service: weatherapp
+        io.kompose.service: weatherstore
     spec:
       containers:
-        - image: weatherapp
-          name: weatherapp
+        - image: weatherstore
+          name: weatherstore
           ports:
             - containerPort: 50001
-            - containerPort: 80
           resources: {}
           imagePullPolicy: Never
       restartPolicy: Always      
