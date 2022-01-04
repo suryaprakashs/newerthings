@@ -4,12 +4,24 @@ services:
   weatherapp:
     build: .\weatherapi
     ports:
-        - "80:80"
-        - "443:443"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-    volumes:
-      - ~/.aspnet/https:/https:ro
+        - "51000:50001"
+        - "8081:80"
+
+  weatherapp-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "weatherapp", "-app-port", "80" ]
+    depends_on:
+      - weatherapp
+    network_mode: "service:weatherapp"
+
+  weatherstore:
+    build: .\weather-store
+    ports:
+        - "52000:50001"
+
+  weatherstore-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "weatherstore", "-app-port", "80" ]
+    depends_on:
+      - weatherstore
+    network_mode: "service:weatherstore"
