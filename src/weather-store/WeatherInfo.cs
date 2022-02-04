@@ -1,7 +1,8 @@
-
 namespace weather_store;
-public class WeatherForecast
+
+public class WeatherInfo
 {
+    public string? CountryName { get; set; }
     public DateTime Date { get; set; }
 
     public int TemperatureC { get; set; }

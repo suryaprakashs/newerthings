@@ -6,7 +6,7 @@ services:
     build: .\weatherapi
     ports:
         - "51000:50001"
-        - "8081:80"
+        - "8080:80"
 
   weatherapp-dapr:
     image: "daprio/daprd:latest"
@@ -20,6 +20,7 @@ services:
     build: .\weather-store
     ports:
         - "52000:50001"
+        - "8082:80"
 
   weatherstore-dapr:
     image: "daprio/daprd:latest"
