@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package geo;
+
+service GeoServices {
+  rpc GetCountries (CountryRequest) returns (CountryResponse);
+}
+
+message CountryResponse {
+    repeated Country Countries = 1;
+}
+
+message CountryRequest {
+
+}
+
+message Country {
+    int32 id = 1;
+    string name = 2;
+}

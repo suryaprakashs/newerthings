@@ -6,6 +6,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddGrpcClient<Geo.GeoServices.GeoServicesClient>(c =>
+{
+    c.Address = new Uri("http://localhost:5129");
+});
 
 var app = builder.Build();
 

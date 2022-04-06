@@ -13,14 +13,16 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly DaprClient _daprClient;
-
+    private readonly Geo.GeoServices.GeoServicesClient _client;
     private readonly ILogger<WeatherForecastController> _logger;
 
     public WeatherForecastController(
         DaprClient daprClient,
+        Geo.GeoServices.GeoServicesClient client,
         ILogger<WeatherForecastController> logger)
     {
         _daprClient = daprClient;
+        _client = client;
         _logger = logger;
     }
 
@@ -55,5 +57,12 @@ public class WeatherForecastController : ControllerBase
             HttpMethod.Get,
             "weatherstore",
             "WeatherStore");
+    }
+
+    [HttpGet("GetCountries")]
+    public IEnumerable<Geo.Country> GetCountries()
+    {
+        var response = _client.GetCountries(new Geo.CountryRequest());
+        return response.Countries;
     }
 }
