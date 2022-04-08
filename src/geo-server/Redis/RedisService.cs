@@ -1,12 +1,8 @@
 namespace geo_server.Redis
 {
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using StackExchange.Redis;
     using Microsoft.Extensions.Caching.Distributed;
+    using System;
     using System.Text.Json;
-    using System.Text.Json.Serialization;
 
     public class RedisService
     {

@@ -16,7 +16,7 @@
    <ItemGroup>
     <Protobuf Include="Protos\geo.proto" GrpcServices="Server" Link="Protos\geo.proto" />
 
-    <PackageReference Include="Grpc.AspNetCore" Version="$(GrpcDotNetPackageVersion)" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.44.0" />
   </ItemGroup>
 
 </Project>

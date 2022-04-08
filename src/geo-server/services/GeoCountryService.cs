@@ -1,8 +1,6 @@
-using System;
-using System.Threading.Tasks;
-using Grpc.Core;
-using Geo;
 using geo_server.Redis;
+using Geo;
+using Grpc.Core;
 
 namespace geo_server.Services
 {
@@ -17,9 +15,11 @@ namespace geo_server.Services
 
         public override async Task<CountryResponse> GetCountries(CountryRequest request, ServerCallContext context)
         {
-            var response = new CountryResponse();
+            await Task.CompletedTask;
 
             var countries = _redisService.Get<IEnumerable<Country>>("AllCountries");
+
+            var response = new CountryResponse();
             foreach (var item in countries)
             {
                 response.Countries.Add(new Country { Id = item.Id, Name = item.Name });

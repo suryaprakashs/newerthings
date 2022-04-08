@@ -1,20 +1,13 @@
-using geo_server.Services;
 using geo_server.Redis;
+using geo_server.Services;
 using Geo;
 using System.Net;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -62,6 +55,6 @@ void SeedData()
     var response = new List<Country>();
     response.Add(new Country { Id = 1, Name = "India" });
     response.Add(new Country { Id = 2, Name = "Russia" });
-    var redisService = app.Services.GetService<RedisService>();
+    var redisService = app.Services.GetRequiredService<RedisService>();
     redisService.Set("AllCountries", response);
 }
