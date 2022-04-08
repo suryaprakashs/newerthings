@@ -1,6 +1,14 @@
 using geo_server.Services;
+using geo_server.Redis;
+using Geo;
 using System.Net;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,14 +19,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddGrpc();
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.InstanceName = builder.Configuration.GetValue<string>("redis:name");
+    options.Configuration = builder.Configuration.GetValue<string>("redis:host") + ":" + builder.Configuration.GetValue<string>("redis:port");
+});
+
+builder.Services.AddSingleton<RedisService>();
+builder.Services.AddSession();
 
 builder.WebHost.ConfigureKestrel((context, options) =>
   {
       options.Listen(IPAddress.Any, 5129, listenOptions =>
       {
-        // Use HTTP/3
           listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
-          //listenOptions.UseHttps();
       });
   });
 
@@ -30,7 +44,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseSession();
 app.UseRouting();
 
 app.UseEndpoints(endpoints =>
@@ -38,4 +52,16 @@ app.UseEndpoints(endpoints =>
     endpoints.MapGrpcService<GeoCountryService>();
 });
 
+SeedData();
+
 app.Run();
+
+
+void SeedData()
+{
+    var response = new List<Country>();
+    response.Add(new Country { Id = 1, Name = "India" });
+    response.Add(new Country { Id = 2, Name = "Russia" });
+    var redisService = app.Services.GetService<RedisService>();
+    redisService.Set("AllCountries", response);
+}
