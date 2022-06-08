@@ -1,30 +1,49 @@
-version: '3.4'
+version: "3.4"
 
 services:
-  weatherapp:
-    image: weatherapp
-    build: .\weatherapi
+  cache:
+    image: redis:latest
+    restart: always
     ports:
-        - "51000:50001"
-        - "8080:80"
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./cache:/data
+    container_name: cache
 
-  weatherapp-dapr:
-    image: "daprio/daprd:latest"
-    command: [ "./daprd", "-app-id", "weatherapp", "-app-port", "80" ]
-    depends_on:
-      - weatherapp
-    network_mode: "service:weatherapp"
-
-  weatherstore:
-    image: weatherstore
-    build: .\weather-store
+  weatherapi:
+    image: weatherapi
+    build: .\weather-api
     ports:
-        - "52000:50001"
-        - "8082:80"
+      - "51000:50001"
+      - "8080:80"
 
-  weatherstore-dapr:
+  weatherapi-dapr:
     image: "daprio/daprd:latest"
-    command: [ "./daprd", "-app-id", "weatherstore", "-app-port", "80" ]
+    command: ["./daprd", "-app-id", "weatherapi", "-app-port", "80"]
     depends_on:
-      - weatherstore
-    network_mode: "service:weatherstore"
+      - weatherapi
+    network_mode: "service:weatherapi"
+
+  weatherstoreapi:
+    image: weatherstoreapi
+    build: .\weather-store-api
+    ports:
+      - "51001:50001"
+      - "8081:80"
+
+  weatherstoreapi-dapr:
+    image: "daprio/daprd:latest"
+    command: ["./daprd", "-app-id", "weatherstoreapi", "-app-port", "80"]
+    depends_on:
+      - weatherstoreapi
+    network_mode: "service:weatherstoreapi"
+
+  geoserver:
+    image: geoserver
+    build: .\geo-server
+    ports:
+      - "5129:5129"
+    depends_on:
+      - cache
+    container_name: geoserver

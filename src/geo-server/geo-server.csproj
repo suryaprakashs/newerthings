@@ -14,7 +14,7 @@
   </ItemGroup>
 
    <ItemGroup>
-    <Protobuf Include="Protos\geo.proto" GrpcServices="Server" Link="Protos\geo.proto" />
+    <Protobuf Include=".\geo.proto" GrpcServices="Server" />
 
     <PackageReference Include="Grpc.AspNetCore" Version="2.44.0" />
   </ItemGroup>

@@ -55,7 +55,7 @@ public class WeatherForecastController : ControllerBase
     {
         return await _daprClient.InvokeMethodAsync<IEnumerable<WeatherForecast>>(
             HttpMethod.Get,
-            "weatherstore",
+            "weatherstoreapi",
             "WeatherStore");
     }
 

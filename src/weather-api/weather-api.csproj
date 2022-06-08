@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\geo-server\Protos\geo.proto" GrpcServices="Client" Link="Protos\geo.proto" />
+    <Protobuf Include=".\geo.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>
