@@ -38,28 +38,18 @@ public class WeatherForecastController : ControllerBase
         .ToArray();
     }
 
-    [HttpGet("GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> GetWeatherForecast()
+    [HttpGet("historic")]
+    public async Task<IEnumerable<WeatherForecast>> GetWeatherForecastFromStore(DateTime start, DateTime end, string countryCode)
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
-    }
-
-    [HttpGet("GetWeatherForecastFromStore")]
-    public async Task<IEnumerable<WeatherForecast>> GetWeatherForecastFromStore()
-    {
-        return await _daprClient.InvokeMethodAsync<IEnumerable<WeatherForecast>>(
+        var data = new { start, end, countryCode };
+        return await _daprClient.InvokeMethodAsync<object, IEnumerable<WeatherForecast>>(
             HttpMethod.Get,
             "weatherstoreapi",
-            "WeatherStore");
+            "WeatherStore",
+            data);
     }
 
-    [HttpGet("GetCountries")]
+    [HttpGet("countries")]
     public IEnumerable<Geo.Country> GetCountries()
     {
         var response = _client.GetCountries(new Geo.CountryRequest());

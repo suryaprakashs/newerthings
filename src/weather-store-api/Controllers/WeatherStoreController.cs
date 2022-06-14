@@ -19,16 +19,23 @@ public class WeatherStoreController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
-    public IEnumerable<WeatherInfo> Get()
+    [HttpGet("historic")]
+    public IEnumerable<WeatherInfo> Get(DateTime start, DateTime end, string countryCode)
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherInfo
+        // Todo: Add validation for start and end dates, in the for loop.
+        var infos = new List<WeatherInfo>();
+        for (var s = start; s < end; s.AddDays(1))
         {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)],
-            CountryName = "India"
-        })
-        .ToArray();
+            var info = new WeatherInfo
+            {
+                Date = s,
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)],
+                CountryCode = countryCode
+            };
+            infos.Add(info);
+        }
+
+        return infos;
     }
 }

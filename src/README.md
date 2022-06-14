@@ -57,3 +57,12 @@ kubectl get pods --all-namespaces
 
 kubectl delete --all deployments
 kubectl delete --all pods
+
+# Geo Server
+Service that holds Geo information.
+
+# Weather API Store
+Service that holds historical weather information.
+
+# Weather API
+Service that holds current weather information.
