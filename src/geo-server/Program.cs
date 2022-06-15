@@ -19,6 +19,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 
 builder.Services.AddSingleton<RedisService>();
+builder.Services.AddHostedService<CountryInfoProducerService>();
 builder.Services.AddSession();
 
 builder.WebHost.ConfigureKestrel((context, options) =>
