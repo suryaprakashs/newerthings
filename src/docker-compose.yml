@@ -1,0 +1,105 @@
+version: "3.4"
+
+services:
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    container_name: cache
+    networks:
+      - farming
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - farming
+
+  cropscheduleservice:
+    build: .\CropScheduleService
+    ports:
+      - "51000:50001"
+      - "8080:80"
+    networks:
+      - farming
+
+  cropscheduleservice-dapr:
+    image: "daprio/daprd:latest"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "cropscheduleservice",
+        "-app-port",
+        "80",
+        "-config",
+        "/configuration/dapr-config.yaml",
+      ]
+    depends_on:
+      - cropscheduleservice
+      - zipkin
+    volumes:
+      - "./dapr/configuration/:/configuration"
+    network_mode: "service:cropscheduleservice"
+
+  planmanagementservice:
+    build: .\PlanManagementService
+    ports:
+      - "51001:50001"
+      - "8081:80"
+    networks:
+      - farming
+
+  planmanagementservice-dapr:
+    image: "daprio/daprd:latest"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "planmanagementservice",
+        "-app-port",
+        "80",
+        "-config",
+        "/configuration/dapr-config.yaml",
+      ]
+    depends_on:
+      - planmanagementservice
+      - zipkin
+    volumes:
+      - "./dapr/configuration/:/configuration"
+    network_mode: "service:planmanagementservice"
+
+  cropservice:
+    build: .\CropService
+    ports:
+      - "51002:50001"
+      - "8082:80"
+    depends_on:
+      - cache
+    networks:
+      - farming
+
+  cropservice-dapr:
+    image: "daprio/daprd:latest"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "cropservice",
+        "-app-port",
+        "80",
+        "-config",
+        "/configuration/dapr-config.yaml",
+      ]
+    depends_on:
+      - cropservice
+      - zipkin
+    volumes:
+      - "./dapr/configuration/:/configuration"
+    network_mode: "service:cropservice"
+
+networks:
+  farming: null
