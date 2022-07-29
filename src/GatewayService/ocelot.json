@@ -1,0 +1,54 @@
+{
+    "Routes": [{
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "CropService",
+                "Port": 80
+            }],
+            "UpstreamPathTemplate": "/CropService/{everything}",
+            "UpstreamHttpMethod": [
+                "Get",
+                "Post",
+                "Delete",
+                "Put",
+                "Head"
+            ]
+        },
+        {
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "PlanManagementService",
+                "Port": 80
+            }],
+            "UpstreamPathTemplate": "/PlanManagementService/{everything}",
+            "UpstreamHttpMethod": [
+                "Get",
+                "Post",
+                "Delete",
+                "Put",
+                "Head"
+            ]
+        },
+        {
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "CropScheduleService",
+                "Port": 80
+            }],
+            "UpstreamPathTemplate": "/CropScheduleService/{everything}",
+            "UpstreamHttpMethod": [
+                "Get",
+                "Post",
+                "Delete",
+                "Put",
+                "Head"
+            ]
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:5000"
+    }
+}
