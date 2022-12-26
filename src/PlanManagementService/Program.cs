@@ -13,8 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDaprClient();
-builder.Services.AddDbContext<PlanContext>(
-    options => options.UseInMemoryDatabase(databaseName: "Farming"));
+builder.Services.AddDbContext<PlanContext>();
 
 builder.Services.AddScoped<IPlanRepository, PlanRepository>();
 
@@ -47,15 +46,18 @@ void SeedPlans(WebApplication app)
     var context = scope.ServiceProvider.GetService<PlanContext>();
 
     ArgumentNullException.ThrowIfNull(context);
+    context.Database.EnsureDeletedAsync().Wait();
+    context.Database.EnsureCreatedAsync().Wait();
 
     var cornPlan = new Plan
     {
+        Id = 1,
         Name = "Standard Corn Sowing",
         CropId = 1,
         Activities = new List<Activity>
         {
-            new Activity { Day = 1, Name = "Sowing" },
-            new Activity { Day = 110, Name = "Harvesting" }
+            new Activity { Id = 1, Day = 1, Name = "Sowing" },
+            new Activity { Id = 2, Day = 110, Name = "Harvesting" }
         }
     };
 

@@ -1,5 +1,7 @@
 # newerthings
 
+Install the cosmos locally.
+
 Charts folder contains the template for the Helm Chart deployment.
 
 `helm upgrade --install . my-test-release`
